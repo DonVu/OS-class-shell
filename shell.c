@@ -10,30 +10,47 @@
 #include <unistd.h>
 #include <string.h>
 
+void tokenize(char *args[], char *command){
+    int i = 0;
+    
+    const char delim[2] = " ";
+    args[i] = strtok(command, delim);
+    
+    
+    while (args[i] != NULL){
+        printf("token: %s\n", args[i]);
+        
+        ++i;
+        args[i] = strtok(NULL, delim);
+    }
+}
+
 #define MAX_LINE 80
 
 int main (void){
     char *args[MAX_LINE/2 + 1]; /* command line arguments */
     int should_run = 1; /* flag to determine when to exit program */
-    //char exit_str[] = "exit\n";
+    char exit_str[] = "exit\n";
     
     while (should_run) {
         printf("osh>");
         fflush(stdout);
         
-        int i = 0;
         char command[MAX_LINE];
+        
+        
         fgets(command, (MAX_LINE/2 +1), stdin);
         
-        args[i] = command;
+        printf("Your command is: %s", command);
         
-        printf("Your command is: %s", args[i]);
-        
-        if (!(strcmp(args[i], "exit\n"))){
+        if (!(strcmp(command, exit_str))){
             should_run = 0; /* User exits the shell */
         }
         
-        ++i;
+        tokenize(args, command);
+        
+        
     }
+    
     return 0;
 }
